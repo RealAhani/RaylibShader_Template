@@ -32,7 +32,7 @@ if(CCACHE_FOUND)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif()
 
-cmake_minimum_required(VERSION 3.25...3.31)
+cmake_minimum_required(VERSION 3.31)
 
 project(${P_NAME} VERSION ${P_VERSION})
 set(CMAKE_CXX_STANDARD ${P_CXX_VERSION})
@@ -82,47 +82,22 @@ message("--------------------------------------------- CXX Version: ${P_CXX_VERS
 message("--------------------------------------------- C Version: ${P_C_VERSION} ")
 message("--------------------------------------------- Sulotion name : ${P_NAME} ")
 
-if(HAS_LIB)
-  message("--------------------------------------------- Library name : ${P_LIB_NAME} ")
-endif(HAS_LIB)
-
 message("--------------------------------------------- Exe name : ${P_OUT_NAME} ")
 message("--------------------------------------------- Version: ${P_VERSION} ")
 
 if(NOT BUILD_APK)
-  if(HAS_PCH)
     add_subdirectory("./source/setup")
-  endif(HAS_PCH)
-
-  if(HAS_LIB)
-    add_subdirectory("./source/library")
-  endif()
-
-  if(NOT HAS_TEST)
     add_subdirectory("./source/project")
-  endif(NOT HAS_TEST)
-
-  if(HAS_BENCHMARK)
-    add_subdirectory("./source/benchmark")
-  endif(HAS_BENCHMARK)
 else()
-  BuildAPK(${P_NAME})
+    BuildAPK(${P_NAME})
 endif(NOT BUILD_APK)
 
-message("--------------------------------------------- Benchmarking : ${HAS_BENCHMARK}")
 
 # Don't even look at tests if we're not top level
 if(NOT PROJECT_IS_TOP_LEVEL)
   return()
 endif()
 
-# Adding the tests:
-if(HAS_TEST)
-  message("============================================ TESTING IS ON")
-  enable_testing()
-  list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-  add_subdirectory("test")
-endif(HAS_TEST)
 
 if(HAS_PACKAGE)
   # Set package types (e.g., ZIP,External ,WIX (msiinstaller),IFW(qtinstaller),INNOSETUP,NSIS,NSIS64 ,Nuget TBZ2, TGZ, TXZ ,TZ , DEB, RPM, NSIS, etc.)

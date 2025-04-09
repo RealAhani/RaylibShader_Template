@@ -18,9 +18,6 @@ macro(AndroidSetup target_link)
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u
       ANativeActivity_onCreate")
 
-    # set_property(
-    # TARGET ${target_link} PROPERTY LIBRARY_OUTPUT_DIRECTORY
-    # ${ANDROID_OUTPUT}/lib/${ANDROID_ABI})
     target_compile_definitions(
         ${target_link} PUBLIC RESOURCE_PATH="${CMAKE_SOURCE_DIR}/resources/assets"
         "ANDROID")

@@ -8,11 +8,6 @@ set(P_NAME "NAME" CACHE STRING "project name" FORCE)
 # output name
 set(P_OUT_NAME "main" CACHE STRING "exe or lib name" FORCE)
 
-# internal library name
-set(P_LIB_NAME "main2" CACHE STRING "internal lib name" FORCE)
-
-# test name
-set(P_TEST_NAME "${P_NAME}_test" CACHE STRING "test name" FORCE)
 
 # ################### Versioning
 set(PRVERSION_MAJOR "0" CACHE STRING "" FORCE)
@@ -23,7 +18,7 @@ set(PRVERSION_PATCH "1" CACHE STRING "" FORCE)
 set(P_VERSION "${PRVERSION_MAJOR}.${PRVERSION_MINOR}.${PRVERSION_PATCH}" CACHE STRING "project version" FORCE)
 
 # c++ version
-set(P_CXX_VERSION 20 CACHE STRING "c++ version")
+set(P_CXX_VERSION 23 CACHE STRING "c++ version")
 
 # c version
 set(P_C_VERSION 11 CACHE STRING "c version")
@@ -59,56 +54,17 @@ option(WERROR_FLAG OFF "Warning as error on/off")
 # -Wold-style-cast # warn for c-style casts
 # -Wpedantic # warn if non-standard C++ is used
 # ${OS_ANDROID}:-Wno-main
-set(DBG_FLAGS "-DDEBUG;-Wall;-Wextra;-Wpedantic;-Wshadow;-Wconversion;-Wnon-virtual-dtor;-Wcast-align;-Wunused;-Woverloaded-virtual;-Wsign-conversion;-Wdouble-promotion;-Wformat=2;-Wimplicit-fallthrough;-Wsuggest-override;-Wnull-dereference;-Wold-style-cast;-Wpedantic"
+set(DBG_FLAGS "-DDEBUG;-g;-O0"
   CACHE STRING "debug flags")
-
-# if werror is on add it to debug flags
-if(WERROR_FLAG)
-  list(APPEND DBG_FLAGS "-Werror")
-endif(WERROR_FLAG)
-
-# release flags
-# -march=native -flto -fPIC
-set(REL_FLAGS "-O3;-DNDEBUG;-ftree-vectorize"
-  CACHE STRING "release flags")
-
-# sanitizer flags
-# "-address,-undefined,-memory,-pointer-compare,-pointer-subtract;"
-# ## should be something like this ==> set(SAN_FLAGS "address,undefined,memory,pointer-compare,pointer-subtract" CACHE STRING "sanitizer flags" FORCE)
-set(SAN_FLAGS "address,undefined"
-  CACHE STRING "sanitizer flags")
-
-# sanitizer option
-option(HAS_SAN ON "sanitizer can enabled/disabled")
-
-# ################### static_analyzer
-option(HAS_STATIC_ANALYZER ON "static_analyzer can enabled/disabled")
 
 # ################### Project config
 # the output type of the project can be exe or lib
 option(HAS_EXE ON "project is an exe type")
 option(HAS_CONSOLE ON "exe run with window and console at the same time")
 
-# the output of project is a library if has_exe is off
-if(NOT HAS_EXE)
-  set(P_LIB_TYPE "SHARED" CACHE STRING "project library type (STATIC/SHARED)")
-endif(NOT HAS_EXE)
-
-# ################### Testing and Benchmark
-option(HAS_TEST ON "testing can enabled/disabled")
-
-# Benchmarking config should be (1 or 0)
-option(HAS_BENCHMARK ON "banchmarking can enabled/disabled")
-
 # ################### Build Config
-option(HAS_PCH ON "pre compiled header option for increase build speed")
 option(HAS_UNITY_BUILD OFF "unity build should just enabled in release mode")
 
-# ################### Internal Library
-option(HAS_LIB ON "internal library can enabled/disabled")
-
-# internal lib type
-set(P_INTERNAL_LIB_TYPE "STATIC" CACHE STRING "internal library type (STATIC/SHARED)")
 # External fetched libs type
 set(P_EXTERNAL_LIBS_TYPE "STATIC" CACHE STRING "Fetched librareis type (STATIC/SHARED)")
 
@@ -116,9 +72,9 @@ set(P_EXTERNAL_LIBS_TYPE "STATIC" CACHE STRING "Fetched librareis type (STATIC/S
 # URLS          = [raylib git url;box2d git url]
 # TAGS          = [raylib git tag;box2d git tag] e.g (version or master/main or comit hash)
 # LINKING_VARS  = [raylib;box2d]
-set(URLS "https://github.com/raysan5/raylib.git;https://github.com/erincatto/box2d.git" CACHE STRING "repositories usrls")
-set(TAGS "5.5;28adacf82377d4113f2ed00586141463244b9d10" CACHE STRING "Tag that you want to fetch or branch name")
-set(LINK_VARS "raylib;box2d" CACHE STRING "the library linking variables")
+set(URLS "https://github.com/raysan5/raylib.git" CACHE STRING "repositories usrls")
+set(TAGS "5.5" CACHE STRING "Tag that you want to fetch or branch name")
+set(LINK_VARS "raylib" CACHE STRING "the library linking variables")
 
 if(${PLATFORM} STREQUAL "Android")
   list(APPEND LINK_VARS "native_app_glue;log;android;EGL;GLESV2;OpenSLES")

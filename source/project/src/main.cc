@@ -1,190 +1,122 @@
 /*
- * Copyright (C) 2024 RealAhani - All Rights Reserved
+ * Copyright (C) 2025 RealAhani - All Rights Reserved
  * You may use, distribute and modify this code under the
  * terms of the MIT license, which unfortunately won't be
  * written for another century.
  * You should have received a copy of the MIT license with
  * this file.
  */
+#include <raylib.h>
+#include <rlgl.h>
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
+#include <print>
+#include <random>
+#include <string>
+#include <string_view>
+#include <chrono>
+
+#include "config.hh"
+#include "helper.hh"
+
+auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
 {
     std::println("hello c++23 ");
-    // benchmark is activate from presets and with PROFILE or
-    // PROFILE_SCOP macro`s .
-    // PROFILE();
     using namespace std::string_literals;
+    using namespace std::string_view_literals;
     using namespace myproject::cmake;
 // __________ Project Informations __________
 #if (MYOS == 1)                                      // OS is Windows
-    mloge::print("WIN"s);
+    std::println("WIN");
 #elif (MYOS == 2)                                    // OS is GNU/Linux
-    mloge::print("LINUX"s);
+    std::println("Linux");
 #elif (MYOS == 3)                                    // OS is OSX
-    mloge::print("MAC"s);
+    std::println("MAC");
 #endif
-
-    mloge::print(myproject::cmake::projectName);     // Project-name!
-
-    mloge::print(myproject::cmake::projectVersion);  // Project-version!
+    std::println(myproject::cmake::projectName);     // Project-name!
+    std::println(myproject::cmake::projectVersion);  // Project-version!
     // __________ Project Informations __________
 
     // Raylib window init
-    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI | FLAG_VSYNC_HINT |
-                   FLAG_FULLSCREEN_MODE);
-    InitWindow(0, 0, "Test");
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI | FLAG_VSYNC_HINT);
+    InitWindow(1200, 800, "hello shader");
+    SetTargetFPS(0);
 
     // Window properties
-    [[maybe_unused]]
-    int const width  = {GetScreenWidth()};
-    int const height = {GetScreenHeight()};
-    bool      isQuit = {false};
+    i32 const gWidth  = {GetScreenWidth()};
+    i32 const gHeight = {GetScreenHeight()};
+    bool      isQuit  = {false};
 
-    // Physics related values for box2d (box2d-related)
-    float const squerWidth  = {50.f};
-    float const squerHeight = {50.f};
-    float const squerX      = {800.f};
-    float const squerY      = {(height / 2.f) - 500.f};
-    float const rectWidth   = {5000.f};
-    float const rectHeight  = {50.f};
-    float const rectX       = {0.f};
-    float const rectY       = {(height / 2.f)};
-    float const rectDec     = {10.f};
 
-    // box2d init of the world of the game (box2d-related)
-    b2WorldDef   worldDef = {b2DefaultWorldDef()};
-    b2Vec2 const gravity  = {-5.f, -10.f};
-    worldDef.gravity      = gravity;
-    b2WorldId worldID     = {b2CreateWorld(&worldDef)};
-    worldDef.enableSleep  = false;
+    // clang-format off
 
-    // Creatig a ground (box2d-related)
-    b2BodyDef groundDef = {b2DefaultBodyDef()};
-    groundDef.position  = b2Vec2 {-rectX, -rectY};
-    groundDef.type      = b2_staticBody;
-    groundDef.rotation  = b2MakeRot(rectDec * DEG2RAD);
+    // auto const [fontSDF,shader]= RA_Font::initSDFFont("NotoSans-VariableFont_wdth,wght.ttf"sv,20,95);
 
-    b2BodyId const  groundBodyId   = {b2CreateBody(worldID, &groundDef)};
-    b2Polygon const groundShape    = {b2MakeBox(rectWidth / 2.f, rectHeight / 2.f)};
-    b2ShapeDef      groundShapeDef = {b2DefaultShapeDef()};
-    // Mass is not need for static object
-    groundShapeDef.friction    = 0.3f;
-    groundShapeDef.restitution = 0.7f;
-    b2CreatePolygonShape(groundBodyId, &groundShapeDef, &groundShape);
+    auto const [font,fontSize] = RA_Font::initFont(
+        "NotoSans-VariableFont_wdth,wght.ttf"sv,
+        100,
+        TEXTURE_FILTER_BILINEAR);
 
-    // Ground 2 (box2d-related)
-    b2BodyDef groundDef2 = {b2DefaultBodyDef()};
-    groundDef2.position  = b2Vec2 {-(rectX + 1400), -(rectY - 300)};
-    groundDef2.type      = b2_staticBody;
-    groundDef2.rotation  = b2MakeRot(75.f * DEG2RAD);
+    // clang-format on
+    Shader TestShader = LoadShader(0,
+                                   RA_Global::pathToFile("test.fs"sv,
+                                                         RA_Global::EFileType::Shader)
+                                       .c_str());
 
-    b2BodyId const  groundBodyId2   = {b2CreateBody(worldID, &groundDef2)};
-    b2Polygon const groundShape2    = {b2MakeBox(rectWidth / 2.f, rectHeight / 2.f)};
-    b2ShapeDef      groundShapeDef2 = {b2DefaultShapeDef()};
-    // Mass is not need for static object
-    groundShapeDef2.friction    = 0.3f;
-    groundShapeDef2.restitution = 0.7f;
-    b2CreatePolygonShape(groundBodyId2, &groundShapeDef2, &groundShape2);
+    f32 const iRes[2] = {gWidth / 1.f, gHeight / 1.f};
+    f32       iTime {};
+    Vector2   iMouse {};
 
-    // Create a dynamic box (box2d-related)
-    b2BodyDef boxDef = {b2DefaultBodyDef()};
-    boxDef.position  = b2Vec2 {-squerX, -squerY};
-    boxDef.type      = b2_dynamicBody;
-    boxDef.rotation  = b2MakeRot(30.f * DEG2RAD);
+    i32 resLoc   = GetShaderLocation(TestShader, "iRes");
+    i32 timeLoc  = GetShaderLocation(TestShader, "iTime");
+    i32 mouseLoc = GetShaderLocation(TestShader, "iMouse");
 
-    b2BodyId const  boxBodyId   = {b2CreateBody(worldID, &boxDef)};
-    b2Polygon const boxShape    = {b2MakeBox(squerWidth / 2.f, squerHeight / 2.f)};
-    b2ShapeDef      boxShapeDef = {b2DefaultShapeDef()};
-    boxShapeDef.density         = 1.f;
-    boxShapeDef.friction        = 0.7f;
-    b2CreatePolygonShape(boxBodyId, &boxShapeDef, &boxShape);
+    SetShaderValue(TestShader, resLoc, iRes, SHADER_UNIFORM_VEC2);
+    SetShaderValue(TestShader, timeLoc, &iTime, SHADER_UNIFORM_FLOAT);
+    SetShaderValue(TestShader, mouseLoc, &iMouse, SHADER_UNIFORM_VEC2);
 
-    // Simulating setting (box2d-related)
-    SetTargetFPS(GetMonitorRefreshRate(0));
-    float const  timeStep     = {1.f / 15.f};  // 60HZ
-    int8_t const subStepCount = {3};
-
-    [[maybe_unused]]
-    bool const fex = FileExists("resource/TEST.txt");
-    // std::cout << fex << "dddddddddddddddddddddddddddddddd]\n";
-    std::string const str {LoadFileText("resource/TEST.txt")};
+    Texture2D texture =
+        {rlGetTextureIdDefault(), gWidth, gHeight, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
+    // [[maybe_unused]]
+    // bool const fex = FileExists("resource/TEST.txt");
+    // str const  mystr {LoadFileText("resource/TEST.txt")};
 
     // Main loop
     while (!WindowShouldClose() && !isQuit)
     {
-        // PROFILE_SCOPE("LOOP");
+        iTime  = GetTime();
+        iMouse = GetMousePosition();
         // Input managment with raylib
-        if (IsKeyPressed(KEY_ESCAPE)) [[unlikely]]
+        if (IsKeyPressed(KEY_ESCAPE))
         {
             isQuit = true;
         }
-        // Update world state (box2d-related)
-        b2World_Step(worldID, timeStep, subStepCount);
-
+        else if (IsKeyPressed(KEY_R))
+        {
+            UnloadShader(TestShader);
+            TestShader = LoadShader(0,
+                                    RA_Global::pathToFile("test.fs"sv,
+                                                          RA_Global::EFileType::Shader)
+                                        .c_str());
+        }
+        SetShaderValue(TestShader, timeLoc, &iTime, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(TestShader, mouseLoc, &iMouse, SHADER_UNIFORM_VEC2);
         // Rendering
         ClearBackground(BLACK);
         BeginDrawing();
         DrawFPS(0, 10);
-        b2Vec2 const boxPos {b2Body_GetPosition(boxBodyId)};
-        b2Vec2 const groundPos {b2Body_GetPosition(groundBodyId)};
-        b2Vec2 const groundPos2 {b2Body_GetPosition(groundBodyId2)};
+        // DrawText(mystr.c_str(), width / 2, height / 2, 44, RAYWHITE);
 
-        // Draw a dynamic box
-        DrawRectanglePro(Rectangle {.x      = -boxPos.x,
-                                    .y      = -boxPos.y,
-                                    .width  = squerWidth,
-                                    .height = squerHeight},
-                         Vector2 {.x = (squerWidth / 2.f), .y = (squerHeight / 2.f)},
-                         b2Rot_GetAngle(b2Body_GetRotation(boxBodyId)) * RAD2DEG,
-                         RED);
-
-        // Draw the ground as a box
-        DrawRectanglePro(Rectangle {.x      = -groundPos.x,
-                                    .y      = -groundPos.y,
-                                    .width  = rectWidth,
-                                    .height = rectHeight},
-                         Vector2 {.x = (rectWidth / 2), .y = (rectHeight / 2)},
-                         b2Rot_GetAngle(b2Body_GetRotation(groundBodyId)) * RAD2DEG,
-                         GREEN);
-
-        // Draw the second ground
-        DrawRectanglePro(Rectangle {.x      = -groundPos2.x,
-                                    .y      = -groundPos2.y,
-                                    .width  = rectWidth,
-                                    .height = rectHeight},
-                         Vector2 {.x = (rectWidth / 2), .y = (rectHeight / 2)},
-                         b2Rot_GetAngle(b2Body_GetRotation(groundBodyId2)) * RAD2DEG,
-                         GREEN);
-
-
-        DrawText(str.c_str(), width / 2, height / 2, 44, RAYWHITE);
+        {
+            BeginShaderMode(TestShader);
+            {
+                DrawTexture(texture, 0, 0, WHITE);
+            }
+            EndShaderMode();
+        }
 
         EndDrawing();
     }
     // Cleaning up and bye
-    b2DestroyWorld(worldID);
-    worldID = b2_nullWorldId;
     CloseWindow();
     return 0;
 }
-
-// // If this is a window app and WinMain is needed
-// #if defined(_WIN32)
-// #define NOGDI   // All GDI defines and routines
-// #define NOUSER  // All USER defines and routines
-// #endif
-// // or any library that uses Windows.h
-// #include <windows.h>
-// #if defined(_WIN32)  // raylib uses these names as function parameters
-// #undef near
-// #undef far
-// #endif
-// auto WINAPI WinMain([[maybe_unused]] HINSTANCE hInstance,
-//                     [[maybe_unused]] HINSTANCE hPrevInstance,
-//                     [[maybe_unused]] LPSTR     lpCmdLine,
-//                     [[maybe_unused]] int       nCmdShow) -> int
-// {
-//     // MessageBox(nullptr, "Hello, World!", "My First WinMain", MB_OK);
-
-//     return 0;
-// }

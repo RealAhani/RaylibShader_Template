@@ -72,6 +72,3 @@ endif(${P_EXTERNAL_LIBS_TYPE} STREQUAL "STATIC")
           "ALL External fetched libs build as a BUILD_SHARED_LIBS: ${libbuildtemp}"
         )
 endfunction()
-
-# target_link_libraries(MyApp PRIVATE sfml-graphics sfml-window sfml-system)
-# target_include_directories(MyApp PRIVATE ${SFML_SOURCE_DIR}/include)

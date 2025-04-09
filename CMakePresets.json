@@ -30,8 +30,6 @@
             "hidden": true,
             "inherits": "conf-clang-common",
             "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "VCPKG_TARGET_TRIPLET": "x64-osx-dynamic",
                 "PLATFORM": "Desktop"
             },
             "vendor": {
@@ -45,10 +43,6 @@
             "description": "Windows settings for MSBuild toolchain that apply to msvc and clang",
             "hidden": true,
             "inherits": "conf-clang-common",
-            "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "VCPKG_TARGET_TRIPLET": "x64-windows"
-            },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
@@ -59,8 +53,8 @@
             }
         },
         {
-            "name": "win-clang-safe",
-            "displayName": "Windows Clang Safe",
+            "name": "win-clang",
+            "displayName": "Windows Clang",
             "description": "Target Windows with the clang compiler, debug build type",
             "inherits": "conf-clang-windows-common",
             "cacheVariables": {
@@ -68,14 +62,10 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "P_INTERNAL_LIB_TYPE": "STATIC",
                 "HAS_EXE": "ON",
-                "HAS_LIB": "ON",
                 "HAS_CONSOLE": "ON",
                 "WERROR_FLAG": "ON",
                 "HAS_STATIC_ANALYZER": "ON",
                 "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "ON",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF"
             },
@@ -86,63 +76,8 @@
             }
         },
         {
-            "name": "win-clang-test",
-            "displayName": "Windows Clang Test",
-            "description": "Target Windows with the clang compiler, debug build type",
-            "inherits": "conf-clang-windows-common",
-            "cacheVariables": {
-                "PRESET_NAME": "Test",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
-                "HAS_EXE": "ON",
-                "HAS_LIB": "ON",
-                "HAS_CONSOLE": "ON",
-                "WERROR_FLAG": "OFF",
-                "HAS_STATIC_ANALYZER": "OFF",
-                "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "ON",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "ON",
-                "HAS_UNITY_BUILD": "OFF",
-                "HAS_PACKAGE": "OFF"
-            },
-            "vendor": {
-                "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                    "intelliSenseMode": "windows-clang-x64"
-                }
-            }
-        },
-        {
-            "name": "win-clang-release",
-            "displayName": "Windows Clang Release",
-            "description": "Target Windows with the clang compiler, release build type",
-            "inherits": "conf-clang-windows-common",
-            "cacheVariables": {
-                "PRESET_NAME": "",
-                "VCPKG_INSTALL_OPTIONS": "--no-print-usage",
-                "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
-                "HAS_EXE": "ON",
-                "HAS_LIB": "ON",
-                "HAS_CONSOLE": "OFF",
-                "WERROR_FLAG": "OFF",
-                "HAS_STATIC_ANALYZER": "OFF",
-                "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
-                "HAS_UNITY_BUILD": "ON",
-                "HAS_PACKAGE": "ON"
-            },
-            "vendor": {
-                "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                    "intelliSenseMode": "windows-clang-x64"
-                }
-            }
-        },
-        {
-            "name": "unix-clang-safe",
-            "displayName": "Unix Clang Safe",
+            "name": "unix-clang",
+            "displayName": "Unix Clang",
             "description": "Target Unix-like OS with the clang compiler, debug build type",
             "inherits": "conf-unixlike-common",
             "cacheVariables": {
@@ -150,65 +85,17 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "P_INTERNAL_LIB_TYPE": "STATIC",
                 "HAS_EXE": "ON",
-                "HAS_LIB": "ON",
                 "HAS_CONSOLE": "ON",
                 "WERROR_FLAG": "ON",
                 "HAS_STATIC_ANALYZER": "ON",
                 "HAS_SAN": "ON",
-                "HAS_BENCHMARK": "ON",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF"
-            }
-        },
-        {
-            "name": "unix-clang-test",
-            "displayName": "Unix Clang Test",
-            "description": "Target Unix-like OS with the clang compiler, debug build type",
-            "inherits": "conf-unixlike-common",
-            "cacheVariables": {
-                "PRESET_NAME": "Test",
-                "CMAKE_BUILD_TYPE": "Debug",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
-                "HAS_EXE": "ON",
-                "HAS_LIB": "ON",
-                "HAS_CONSOLE": "ON",
-                "WERROR_FLAG": "OFF",
-                "HAS_STATIC_ANALYZER": "OFF",
-                "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "ON",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "ON",
-                "HAS_UNITY_BUILD": "OFF",
-                "HAS_PACKAGE": "OFF"
-            }
-        },
-        {
-            "name": "unix-clang-release",
-            "displayName": "Unix Clang Release",
-            "description": "Target Unix-like OS with the clang compiler, debug build type",
-            "inherits": "conf-unixlike-common",
-            "cacheVariables": {
-                "PRESET_NAME": "",
-                "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
-                "HAS_EXE": "ON",
-                "HAS_LIB": "ON",
-                "HAS_CONSOLE": "ON",
-                "WERROR_FLAG": "OFF",
-                "HAS_STATIC_ANALYZER": "OFF",
-                "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
-                "HAS_UNITY_BUILD": "ON",
-                "HAS_PACKAGE": "ON"
             }
         },
         {
             "name": "arm64-v8a",
-            "description": "Unix-like OS settings for ndk clang toolchains with vcpkg",
+            "description": "Unix-like OS settings for ndk clang toolchains",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${hostSystemName}/Other/Android/${presetName}",
             "installDir": "${sourceDir}/build/install/${hostSystemName}/Other/Android/${presetName}",
@@ -216,10 +103,8 @@
                 "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
                 "PRESET_NAME": "",
                 "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
                 "P_EXTERNAL_LIBS_TYPE": "STATIC",
                 "HAS_EXE": "OFF",
-                "HAS_LIB": "OFF",
                 "HAS_CONSOLE": "OFF",
                 "P_CXX_VERSION": "23",
                 "P_C_VERSION": "11",
@@ -228,9 +113,6 @@
                 "WERROR_FLAG": "OFF",
                 "HAS_STATIC_ANALYZER": "OFF",
                 "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF",
                 "PLATFORM": "Android",
@@ -245,7 +127,7 @@
         },
         {
             "name": "armeabi-v7a",
-            "description": "Unix-like OS settings for ndk clang toolchains with vcpkg",
+            "description": "Unix-like OS settings for ndk clang",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${hostSystemName}/Other/Android/${presetName}",
             "installDir": "${sourceDir}/build/install/${hostSystemName}/Other/Android/${presetName}",
@@ -253,10 +135,8 @@
                 "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
                 "PRESET_NAME": "",
                 "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
                 "P_EXTERNAL_LIBS_TYPE": "STATIC",
                 "HAS_EXE": "OFF",
-                "HAS_LIB": "OFF",
                 "HAS_CONSOLE": "OFF",
                 "P_CXX_VERSION": "23",
                 "P_C_VERSION": "11",
@@ -265,9 +145,6 @@
                 "WERROR_FLAG": "OFF",
                 "HAS_STATIC_ANALYZER": "OFF",
                 "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF",
                 "PLATFORM": "Android",
@@ -282,7 +159,7 @@
         },
         {
             "name": "x86_64",
-            "description": "Unix-like OS settings for ndk clang toolchains with vcpkg",
+            "description": "Unix-like OS settings for ndk clang",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${hostSystemName}/Other/Android/${presetName}",
             "installDir": "${sourceDir}/build/install/${hostSystemName}/Other/Android/${presetName}",
@@ -290,10 +167,8 @@
                 "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
                 "PRESET_NAME": "",
                 "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
                 "P_EXTERNAL_LIBS_TYPE": "STATIC",
                 "HAS_EXE": "OFF",
-                "HAS_LIB": "OFF",
                 "HAS_CONSOLE": "OFF",
                 "P_CXX_VERSION": "23",
                 "P_C_VERSION": "11",
@@ -302,9 +177,6 @@
                 "WERROR_FLAG": "OFF",
                 "HAS_STATIC_ANALYZER": "OFF",
                 "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF",
                 "PLATFORM": "Android",
@@ -319,7 +191,7 @@
         },
         {
             "name": "x86",
-            "description": "Unix-like OS settings for ndk clang toolchains with vcpkg",
+            "description": "Unix-like OS settings for ndk clang",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${hostSystemName}/Other/Android/${presetName}",
             "installDir": "${sourceDir}/build/install/${hostSystemName}/Other/Android/${presetName}",
@@ -327,10 +199,8 @@
                 "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
                 "PRESET_NAME": "",
                 "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
                 "P_EXTERNAL_LIBS_TYPE": "STATIC",
                 "HAS_EXE": "OFF",
-                "HAS_LIB": "OFF",
                 "HAS_CONSOLE": "OFF",
                 "P_CXX_VERSION": "23",
                 "P_C_VERSION": "11",
@@ -339,9 +209,6 @@
                 "WERROR_FLAG": "OFF",
                 "HAS_STATIC_ANALYZER": "OFF",
                 "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF",
                 "PLATFORM": "Android",
@@ -356,7 +223,7 @@
         },
         {
             "name": "Build-App",
-            "description": "Unix-like OS settings for ndk clang toolchains with vcpkg",
+            "description": "Unix-like OS settings for ndk clang",
             "generator": "Ninja Multi-Config",
             "binaryDir": "${sourceDir}/build/${hostSystemName}/Other/Android/${presetName}",
             "installDir": "${sourceDir}/build/install/${hostSystemName}/Other/Android/${presetName}",
@@ -364,10 +231,8 @@
                 "CMAKE_TOOLCHAIN_FILE": "$env{ANDROID_NDK_HOME}/build/cmake/android.toolchain.cmake",
                 "PRESET_NAME": "",
                 "CMAKE_BUILD_TYPE": "Release",
-                "P_INTERNAL_LIB_TYPE": "STATIC",
                 "P_EXTERNAL_LIBS_TYPE": "STATIC",
                 "HAS_EXE": "OFF",
-                "HAS_LIB": "OFF",
                 "HAS_CONSOLE": "OFF",
                 "P_CXX_VERSION": "23",
                 "P_C_VERSION": "11",
@@ -376,9 +241,6 @@
                 "WERROR_FLAG": "OFF",
                 "HAS_STATIC_ANALYZER": "OFF",
                 "HAS_SAN": "OFF",
-                "HAS_BENCHMARK": "OFF",
-                "HAS_PCH": "ON",
-                "HAS_TEST": "OFF",
                 "HAS_UNITY_BUILD": "OFF",
                 "HAS_PACKAGE": "OFF",
                 "PLATFORM": "Android",
@@ -394,44 +256,17 @@
     ],
     "buildPresets": [
         {
-            "name": "win-clang-safe",
+            "name": "win-clang",
             "displayName": "Windows Clang Safe",
-            "configurePreset": "win-clang-safe",
+            "configurePreset": "win-clang",
             "configuration": "Debug",
             "jobs": 12
         },
         {
-            "name": "win-clang-test",
-            "displayName": "Windows Clang Test",
-            "configurePreset": "win-clang-test",
-            "configuration": "Debug"
-        },
-        {
-            "name": "win-clang-release",
-            "displayName": "Windows Clang Release",
-            "configurePreset": "win-clang-release",
-            "configuration": "Release",
-            "jobs": 12
-        },
-        {
-            "name": "unix-clang-safe",
+            "name": "unix-clang",
             "displayName": "Unix Clang Safe",
-            "configurePreset": "unix-clang-safe",
+            "configurePreset": "unix-clang",
             "configuration": "Debug",
-            "jobs": 12
-        },
-        {
-            "name": "unix-clang-test",
-            "displayName": "Unix Clang Test",
-            "configurePreset": "unix-clang-test",
-            "configuration": "Debug",
-            "jobs": 12
-        },
-        {
-            "name": "unix-clang-release",
-            "displayName": "Unix Clang Release",
-            "configurePreset": "unix-clang-release",
-            "configuration": "Release",
             "jobs": 12
         },
         {

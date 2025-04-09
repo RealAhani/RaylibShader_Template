@@ -9,6 +9,26 @@
 
 #pragma once
 
+#define cast(type, var) static_cast<type>(var)
+using u8    = std::uint8_t;
+using u16   = std::uint16_t;
+using u32   = std::uint32_t;
+using u64   = std::uint64_t;
+using i8    = std::int8_t;
+using i16   = std::int16_t;
+using i32   = std::int32_t;
+using i64   = std::int64_t;
+using f32   = float;
+using f64   = double;
+using str_v = std::string_view;
+using str   = std::string;
+
+#if defined(PLATFORM_DESKTOP)
+#define GLSL_VERSION 330
+#else  // PLATFORM_ANDROID, PLATFORM_WEB
+#define GLSL_VERSION 100
+#endif
+
 namespace myproject::cmake{
 
 #define MYOS @CURRENTOS@
@@ -17,19 +37,5 @@ inline static constexpr int myOS {@CURRENTOS@};               // OS should be de
 inline static constexpr std::string_view projectName {"@P_NAME@"};        // project name 
 inline static constexpr std::string_view projectVersion {"@P_VERSION@"};  // project version
 inline static constexpr std::string_view platform {"@PLATFORM@"};  // current platform that run this
-
-#cmakedefine HAS_LIB
-#ifdef HAS_LIB
-#define INERNAL_LIB 1
-#else
-#define INERNAL_LIB 0
-#endif
-
-#cmakedefine HAS_BENCHMARK
-#ifdef HAS_BENCHMARK
-#define PROFILING 1
-#else
-#define PROFILING 0
-#endif
 
 }
