@@ -97,6 +97,7 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
                                     RA_Global::pathToFile("test.fs"sv,
                                                           RA_Global::EFileType::Shader)
                                         .c_str());
+            SetShaderValue(TestShader, resLoc, iRes, SHADER_UNIFORM_VEC2);
         }
         SetShaderValue(TestShader, timeLoc, &iTime, SHADER_UNIFORM_FLOAT);
         SetShaderValue(TestShader, mouseLoc, &iMouse, SHADER_UNIFORM_VEC2);
