@@ -103,17 +103,17 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
         // Rendering
         ClearBackground(BLACK);
         BeginDrawing();
-        DrawFPS(0, 10);
         // DrawText(mystr.c_str(), width / 2, height / 2, 44, RAYWHITE);
 
         {
             BeginShaderMode(TestShader);
             {
-                DrawTexture(texture, 0, 0, WHITE);
+                DrawTexture(texture, 0, 0, GRAY);
             }
             EndShaderMode();
         }
 
+        DrawFPS(0, 10);
         EndDrawing();
     }
     // Cleaning up and bye
