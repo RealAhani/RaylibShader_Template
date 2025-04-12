@@ -79,6 +79,19 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
     // [[maybe_unused]]
     // bool const fex = FileExists("resource/TEST.txt");
     // str const  mystr {LoadFileText("resource/TEST.txt")};
+    u16 const wtext {cast(u16, gWidth)};
+    u16 const htext {cast(u16, gHeight)};
+    Texture2D tempTexture =
+        {rlGetTextureIdDefault(), wtext, htext, 1, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8};
+
+    RenderTexture2D effectTexture = LoadRenderTexture(wtext, htext);
+    BeginTextureMode(effectTexture);
+    ClearBackground(BLANK);
+    BeginShaderMode(TestShader);
+    DrawTexture(tempTexture, 0, 0, WHITE);
+    EndShaderMode();
+    EndTextureMode();
+    UnloadShader(TestShader);
 
     // Main loop
     while (!WindowShouldClose() && !isQuit)
@@ -107,11 +120,11 @@ auto main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) -> int
         // DrawText(mystr.c_str(), width / 2, height / 2, 44, RAYWHITE);
 
         {
-            BeginShaderMode(TestShader);
-            {
-                DrawTexture(texture, 0, 0, GRAY);
-            }
-            EndShaderMode();
+            // BeginShaderMode(TestShader);
+            // {
+            DrawTextureEx(effectTexture.texture, Vector2 {}, 0.f, 1.f, WHITE);
+            // }
+            // EndShaderMode();
         }
 
         DrawFPS(0, 10);
